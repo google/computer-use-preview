@@ -74,6 +74,12 @@ def main() -> int:
         help="Auto-create IAM execution role if it doesn't exist (agentcore only).",
     )
     parser.add_argument(
+        "--browser_identifier",
+        type=str,
+        default=None,
+        help="Browser identifier for AgentCore (agentcore only). Defaults to AGENTCORE_BROWSER_IDENTIFIER env var or 'aws.browser.v1'.",
+    )
+    parser.add_argument(
         "--model",
         default='gemini-2.5-computer-use-preview-10-2025',
         help="Set which main model to use.",
@@ -99,6 +105,7 @@ def main() -> int:
             recording_prefix=args.recording_prefix,
             execution_role_arn=args.execution_role_arn,
             create_execution_role=args.create_execution_role,
+            browser_identifier=args.browser_identifier,
         )
     else:
         raise ValueError("Unknown environment: ", args.env)
