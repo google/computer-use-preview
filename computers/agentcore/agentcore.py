@@ -121,12 +121,6 @@ class AgentCoreComputer(PlaywrightComputer):
             attrs=["bold"],
         )
 
-        try:
-            live_view_url = self._client.generate_live_view_url()
-            termcolor.cprint(f"Live view: {live_view_url}", color="cyan", attrs=["bold"])
-        except Exception:
-            pass
-
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):

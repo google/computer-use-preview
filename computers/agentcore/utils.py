@@ -27,20 +27,14 @@ def create_recording_role(
     sts = boto3.client("sts", region_name=region)
     account_id = sts.get_caller_identity()["Account"]
 
-    # Role name includes browser identifier
-    clean_identifier = browser_identifier.replace(".", "-")
-    role_name = f"AgentCoreBrowserRecording-{clean_identifier}"
+    # Role name uses hash of region/bucket/prefix for uniqueness
+    role_hash = hashlib.md5(
+        f"{region}/{recording_bucket}/{recording_prefix}".encode()
+    ).hexdigest()
+    role_name = f"AgentCoreBrowserRecording-{role_hash}"
 
-    # Policy name includes bucket/prefix for readability
-    clean_prefix = recording_prefix.replace("/", "-")
-    policy_name = f"S3RecordingAccess-{recording_bucket}-{clean_prefix}"
-
-    # Truncate if too long (IAM limit is 128 chars)
-    if len(policy_name) > 128:
-        bucket_prefix_hash = hashlib.sha256(
-            f"{recording_bucket}/{recording_prefix}".encode()
-        ).hexdigest()[:8]
-        policy_name = f"S3RecordingAccess-{recording_bucket}-{bucket_prefix_hash}"
+    # Policy name uses same hash
+    policy_name = f"S3RecordingAccess-{role_hash}"
 
     trust_policy = {
         "Version": "2012-10-17",
