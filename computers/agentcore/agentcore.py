@@ -1,5 +1,4 @@
 import os
-from typing import final, override
 
 import termcolor
 from playwright.sync_api import sync_playwright
@@ -90,8 +89,7 @@ class AgentCoreComputer(PlaywrightComputer):
 
         session_id = self._client.start(
             identifier=browser_identifier_to_use,
-            name="gemini-browser-session",
-            # viewport={"width": self._screen_size[0], "height": self._screen_size[1]}
+            name="gemini-browser-session"
         )
         print(f"AgentCore browser session started: {session_id}")
 
